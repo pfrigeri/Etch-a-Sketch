@@ -5,8 +5,8 @@
     border: solid 2px chartreuse;
     display:flex;
     flex-wrap: wrap;
-    justify-content:space-around;
-    /* gap: 1px; */
+    justify-content:space-evenly;
+    gap: 1px;
 
 }
 

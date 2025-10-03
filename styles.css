@@ -1,0 +1,12 @@
+#grid-container{
+    width: 100%;
+    height: 500px;
+    border: solid 2px chartreuse;
+}
+
+.grid-square{
+    border: solid 2px crimson;
+    width: 16px;
+    height: 16px;
+    
+}

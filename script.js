@@ -10,5 +10,11 @@ for(let i = 0; i < (sqrPerColumn*sqrPerColumn); i++){
     const square = document.createElement("div");
     square.classList.add('grid-square');
 
-    gridContainer.appendChild(square)
+    gridContainer.appendChild(square);
+
+    square.addEventListener('mouseover', (e) => {
+    square.style.backgroundColor = "black"
+})
 }
+
+//Do a button that resets the grid to the original color

@@ -1,12 +1,19 @@
 #grid-container{
-    width: 100%;
+    margin: 0 auto;
+    width: 500px;
     height: 500px;
     border: solid 2px chartreuse;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content:space-around;
+    /* gap: 1px; */
+
 }
 
 .grid-square{
-    border: solid 2px crimson;
+    /* border: solid 1px crimson; */
+    background-color:crimson;
     width: 16px;
     height: 16px;
-    
+    /* flex: auto; */
 }

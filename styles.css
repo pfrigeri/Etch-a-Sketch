@@ -42,3 +42,14 @@ p{
 #scale:hover + p{
     display: block;
 }
+
+.attribution{
+    text-align: center;
+    margin: 10px auto;
+    color: beige;
+}
+
+a{
+    text-decoration: none;
+    color: chartreuse;
+}

@@ -22,28 +22,36 @@ let loadGrid = (sqrPerSide = sqrPerRow) =>{
 
         gridContainer.appendChild(square);
 
+        //change the hardcoded color to a class
         square.addEventListener('mouseover', (e) => {
             square.style.backgroundColor = "black"
         })
     }
 }
 
-loadGrid(50);
+loadGrid();
 
 let scaleBtn = document.querySelector('#scale');
+let currentScale = sqrPerRow;
 
-scaleBtn.addEventListener('click', () => {
-    let scale = Number.parseInt(prompt("Enter the amount of squares per side you want: "));
+//Verify if shift is pressed on click to clean the grid instead of dblclick
+scaleBtn.addEventListener('click', (e) => {
 
-    if(scale > 0 && scale < 100){
-        loadGrid(scale);
-    } 
+    if(e.shiftKey){
+        loadGrid(currentScale)
+    }
     else{
-        alert("The number has to be between 1 and 99 !");
+
+        let scale = Number.parseInt(prompt("Enter the amount of squares per side you want: "));
+
+        if(scale > 0 && scale < 100){
+            loadGrid(scale);
+            currentScale = scale;
+        } 
+        else{
+            alert("The number has to be between 1 and 99 !");
+        }
     }
 })
 
 
-
-// #1. Do a button that changes square per side and resets the grid on DoubleClick
-// #2. Put a hidden <p> tip on btn hover that indicates the DoubleClick reset

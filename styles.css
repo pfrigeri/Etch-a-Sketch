@@ -7,10 +7,21 @@ h1{
     color: beige;
 }
 
+#scale{
+    display: block;
+    margin: 16px auto;
+    padding: 8px 16px;
+    background-color: crimson;
+    border: 1px solid chartreuse;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 8px;
+}
+
 #grid-container{
     margin: 0 auto;
-    width: 500px;
-    height: 500px;
+    width: 600px;
+    height: 600px;
     border: solid 2px chartreuse;
     display:flex;
     flex-wrap: wrap;

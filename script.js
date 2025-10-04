@@ -17,4 +17,5 @@ for(let i = 0; i < (sqrPerColumn*sqrPerColumn); i++){
 })
 }
 
-//Do a button that resets the grid to the original color
+// #1. Do a button that changes square per side and resets the grid on DoubleClick
+// #2. Put a hidden <p> tip on btn hover that indicates the DoubleClick reset

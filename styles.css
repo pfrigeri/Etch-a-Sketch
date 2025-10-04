@@ -1,5 +1,6 @@
 body{
     background-color: #191a1b;
+    height: 100vh;
 }
 
 h1{
@@ -31,9 +32,5 @@ h1{
 }
 
 .grid-square{
-    /* border: solid 1px crimson; */
     background-color:crimson;
-    width: 16px;
-    height: 16px;
-
 }

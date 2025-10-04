@@ -6,16 +6,29 @@ const squareSize = 16;
 let sqrPerColumn = Math.floor(gridH/(squareSize + 1));
 let sqrPerRow = Math.floor(gridW/(squareSize + 1));
 
-for(let i = 0; i < (sqrPerColumn*sqrPerColumn); i++){
-    const square = document.createElement("div");
-    square.classList.add('grid-square');
+let loadGrid = (sqrPerSide = sqrPerRow) =>{
 
-    gridContainer.appendChild(square);
+    gridContainer.innerHTML = ''
 
-    square.addEventListener('mouseover', (e) => {
-    square.style.backgroundColor = "black"
-})
+    //compensates the space taken for the gap property avoiding overflow
+    let avalableWidth = gridW - (sqrPerSide -1);
+
+    for(let i = 0; i < (sqrPerSide**2); i++){
+
+        const square = document.createElement("div");
+        square.classList.add('grid-square');
+        square.style.width = `${avalableWidth/sqrPerSide}px`
+        square.style.height = `${avalableWidth/sqrPerSide}px`
+
+        gridContainer.appendChild(square);
+
+        square.addEventListener('mouseover', (e) => {
+            square.style.backgroundColor = "black"
+        })
+    }
 }
+
+loadGrid(30);
 
 // #1. Do a button that changes square per side and resets the grid on DoubleClick
 // #2. Put a hidden <p> tip on btn hover that indicates the DoubleClick reset

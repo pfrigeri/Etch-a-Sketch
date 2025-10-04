@@ -28,7 +28,22 @@ let loadGrid = (sqrPerSide = sqrPerRow) =>{
     }
 }
 
-loadGrid(30);
+loadGrid(50);
+
+let scaleBtn = document.querySelector('#scale');
+
+scaleBtn.addEventListener('click', () => {
+    let scale = Number.parseInt(prompt("Enter the amount of squares per side you want: "));
+
+    if(scale > 0 && scale < 100){
+        loadGrid(scale);
+    } 
+    else{
+        alert("The number has to be between 1 and 99 !");
+    }
+})
+
+
 
 // #1. Do a button that changes square per side and resets the grid on DoubleClick
 // #2. Put a hidden <p> tip on btn hover that indicates the DoubleClick reset

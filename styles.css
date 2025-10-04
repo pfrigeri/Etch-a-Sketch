@@ -3,9 +3,13 @@ body{
     height: 100vh;
 }
 
-h1{
+h1,p{
     text-align: center;
     color: beige;
+}
+
+p{
+    display: none;
 }
 
 #scale{
@@ -33,4 +37,8 @@ h1{
 
 .grid-square{
     background-color:crimson;
+}
+
+#scale:hover + p{
+    display: block;
 }

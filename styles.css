@@ -58,6 +58,7 @@ a{
     #grid-container{
         width: 375px;
         height: 600px;
+        touch-action: none;
     }
 
     h1{

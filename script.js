@@ -1,120 +1,115 @@
 const gridContainer = document.querySelector("#grid-container");
-let gridW = gridContainer.clientWidth;
-let gridH = gridContainer.clientHeight;
-const squareSize = 16;
-//Add +1 into square size for the gap property
-let sqrPerColumn = Math.floor(gridH / (squareSize + 1));
-let sqrPerRow = Math.floor(gridW / (squareSize + 1));
+const scaleBtn = document.querySelector('#scale');
 
-let loadGrid = (sqrPerSide = sqrPerRow) => {
+let getGridWidth = () => gridContainer.clientWidth;
+let getGridHeight = () => gridContainer.clientHeight;
+let clearGrid = () => gridContainer.innerHTML = '';
 
-    gridContainer.innerHTML = ''
+let calculateSquarePerRow = (width, squareSize = 16, gap = 1) => {
+    return Math.floor(width / (squareSize + gap));
+}
 
-    //compensates the space taken for the gap property avoiding overflow
-    let avalableWidth = gridW - (sqrPerSide - 1);
+let isDrawing = false;
+const stopDrawing = () => { isDrawing = false; };
+
+const mobileTouchStart = (e) => {
+    if (e.target.classList.contains('grid-square')) {
+        isDrawing = true;
+        e.target.style.backgroundColor = 'black';
+    }
+};
+
+const mobileTouchMove = (e) => {
+    if (isDrawing) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const element = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (element && element.classList.contains('grid-square')) {
+            element.style.backgroundColor = 'black';
+        }
+    }
+};
+
+let loadSquaredGrid = (sqrPerSide) => {
+    // Limpeza crucial: desativa a lógica mobile
+    gridContainer.removeEventListener('touchstart', mobileTouchStart);
+    gridContainer.removeEventListener('touchmove', mobileTouchMove);
+    window.removeEventListener('touchend', stopDrawing);
+
+    clearGrid();
+    gridContainer.style.display = 'flex';
+    gridContainer.style.flexWrap = 'wrap';
 
     for (let i = 0; i < (sqrPerSide ** 2); i++) {
-
         const square = document.createElement("div");
         square.classList.add('grid-square');
-        square.style.width = `${avalableWidth / sqrPerSide}px`
-        square.style.height = `${avalableWidth / sqrPerSide}px`
-
-        gridContainer.appendChild(square);
-
-        //change the hardcoded color to a class
+        square.style.width = `calc(${100 / sqrPerSide}% - 1px)`;
+        square.style.aspectRatio = '1 / 1';
+        
         square.addEventListener('mouseover', (e) => {
-            square.style.backgroundColor = "black"
-        })
+            e.target.style.backgroundColor = "black";
+        });
+        
+        gridContainer.appendChild(square);
     }
 }
 
-let loadGridMobile = (columns, rows) => {
-
-    gridContainer.innerHTML = '';
-
-    const totalSquares = columns * rows;
-
-    const squareWidth = 100 / columns;
-    const squareHeight = 100 / rows;
-
-    for (let i = 0; i < totalSquares; i++) {
-
+let loadRectangularGrid = (columns, rows) => {
+    clearGrid();
+    gridContainer.style.display = 'flex';
+    gridContainer.style.flexWrap = 'wrap';
+    
+    for (let i = 0; i < (columns * rows); i++) {
         const square = document.createElement('div');
         square.classList.add('grid-square');
         square.style.width = `calc(${100 / columns}% - 1px)`;
         square.style.height = `calc(${100 / rows}% - 1px)`;
-
         gridContainer.appendChild(square);
-
     }
-
-    let isDrawing = false;
-
-    gridContainer.addEventListener('touchstart', (e) => {
-        if (e.target.classList.contains('grid-square')) {
-            isDrawing = true;
-            e.target.style.backgroundColor = 'black';
-        }
-    }, { passive: true }); // passive:true melhora a performance de rolagem se não usar preventDefault aqui
-
-    window.addEventListener('touchend', () => { isDrawing = false; });
-
-    gridContainer.addEventListener('touchmove', (e) => {
-        if (isDrawing) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const element = document.elementFromPoint(touch.clientX, touch.clientY);
-            if (element && element.classList.contains('grid-square')) {
-                element.style.backgroundColor = 'black';
-            }
-        }
-    });
-
 }
 
-let currentGridW = gridContainer.clientWidth;
-let currentGridH = gridContainer.clientHeight;
+let currentScale; // Guarda a escala atual do desktop
 
-if (currentGridW <= 600) {
+function initializeGrid() {
+    const width = getGridWidth();
+    const height = getGridHeight();
+    const isMobile = window.matchMedia("(pointer: coarse)").matches;
 
-    const targetSquareSize = 16;
+    if (isMobile) {
+        // --- ESTADO MOBILE ---
+        const mobileColumns = Math.floor(width / 17); // 16px + 1px gap
+        const mobileRows = Math.floor(height / 17);
+        loadRectangularGrid(mobileColumns, mobileRows);
 
-    const mobileColumns = Math.floor(currentGridW / targetSquareSize);
-    const mobileRows = Math.floor(currentGridH / targetSquareSize);
+        gridContainer.addEventListener('touchstart', mobileTouchStart);
+        gridContainer.addEventListener('touchmove', mobileTouchMove, { passive: false });
+        window.addEventListener('touchend', stopDrawing);
 
-    loadGridMobile(mobileColumns, mobileRows);
-
-} else {
-    // DESKTOP
-    loadGrid();
+    } else {
+        // --- ESTADO DESKTOP ---
+        const initialSqrPerRow = calculateSquarePerRow(width);
+        currentScale = initialSqrPerRow;
+        loadSquaredGrid(initialSqrPerRow);
+    }
 }
-let scaleBtn = document.querySelector('#scale');
-let currentScale = sqrPerRow;
 
-//Verify if shift is pressed on click to clean the grid instead of dblclick
 scaleBtn.addEventListener('click', (e) => {
+    const scale = parseInt(prompt("Enter the number of squares per side:"));
+    if (isNaN(scale) || scale < 1 || scale > 99) return alert("Number must be between 1 and 99");
 
-    if (e.shiftKey) {
-        loadGrid(currentScale)
+    const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+    const width = getGridWidth();
+    const height = getGridHeight();
+
+    if (isTouchDevice) {
+        const mobileRows = Math.floor(height / (width / scale));
+        loadRectangularGrid(scale, mobileRows);
+    } else {
+        currentScale = scale;
+        loadSquaredGrid(scale);
     }
-    else {
-
-        let scale = Number.parseInt(prompt("Enter the amount of squares per side you want: "));
-
-        if (scale > 0 && scale < 100) {
-            if (currentGridW <= 600) {
-                const newRows = Math.floor(scale * (gridContainer.clientHeight / gridContainer.clientWidth));
-                loadGridMobile(scale, newRows);
-            } else {
-                loadGrid(scale);
-                currentScale = scale;
-            }
-        }
-        else {
-            alert("The number has to be between 1 and 99 !");
-        }
-    }
-})
+});
 
 
+initializeGrid();
+console.log(document.querySelector('.grid-square'));
